@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extrator de Palavras-Chave</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-bottom: 10px;
+    }
+    #resultado {
+      margin-top: 10px;
+      background-color: #f3f3f3;
+      padding: 10px;
+    }
+    .autor {
+      font-style: italic;
+      color: #555;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Extrator de Palavras-Chave</h1>
+  <p class="autor">João Miguel - 2A</p>
+  
+  <textarea id="texto" placeholder="Digite ou cole seu texto aqui..."></textarea>
+  <br />
+  <button onclick="extrairPalavrasChave()">Extrair</button>
+  <div id="resultado"></div>
+
+  <script>
+    function extrairPalavrasChave() {
+      const texto = document.getElementById("texto").value;
+      const palavras = texto.toLowerCase().replace(/[^\w\s]/g, "").split(/\s+/);
+
+      const stopWords = ["de", "da", "do", "e", "a", "o", "que", "em", "um", "uma", "para", "com", "não", "é", "por", "se", "na", "no", "os", "as"];
+      const frequencia = {};
+
+      palavras.forEach(palavra => {
+        if (!stopWords.includes(palavra) && palavra.length > 2) {
+          frequencia[palavra] = (frequencia[palavra] || 0) + 1;
+        }
+      });
+
+      const palavrasOrdenadas = Object.entries(frequencia)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+
+      const resultadoDiv = document.getElementById("resultado");
+      if (palavrasOrdenadas.length === 0) {
+        resultadoDiv.innerHTML = "Nenhuma palavra-chave encontrada.";
+        return;
+      }
+
+      resultadoDiv.innerHTML = "<strong>Palavras-chave:</strong><br>" +
+        palavrasOrdenadas.map(([palavra, contagem]) => `${palavra} (${contagem})`).join("<br>");
+    }
+  </script>
+</body>
+</html>
